@@ -7,7 +7,7 @@
     <meta name="theme-color" content="#000000" />
     <meta
       name="description"
-      content="Web site created using create-react-app"
+      content="React Portal - by Henry Blevins"
     />
     <link rel="apple-touch-icon" href="%PUBLIC_URL%/logo192.png" />
     <!--
@@ -24,10 +24,16 @@
       work correctly both with client-side routing and a non-root public URL.
       Learn how to configure a non-root public URL by running `npm run build`.
     -->
-    <title>React App</title>
+    <title>React Portal - by Henry Blevins</title>
   </head>
   <body>
     <noscript>You need to enable JavaScript to run this app.</noscript>
+    <!--
+      A hardcoded root for our portals to live inside of, so we don't need
+      to worry about creating one at runtime.
+      Yes, you can and should edit this file sometimes.
+    -->
+    <div id="portal-root"></div>
     <div id="root"></div>
     <!--
       This HTML file is a template.

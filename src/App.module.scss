@@ -1,0 +1,69 @@
+// Did you know CRA has a built in css reset?
+@import-normalize;
+
+html, body {
+  font-family: Helvetica, 'Helvetica Nueue', sans-serif;
+  background: #E6E0D0;
+  width: 100%;
+
+  // but it doesn't do this for some reason
+  margin: 0;
+}
+
+button {
+  appearance: none;
+  background: #AC7B91;
+  border-radius: 0.25rem;
+  padding: 1rem;
+  border: none;
+  font-weight: bold;
+  color: white;
+}
+
+.main {
+  min-height: 125vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.stickyFooter {
+  position: fixed;
+  bottom: 0;
+  height: 100px;
+  width: 100%;
+  background: #E5C3C1;
+  border-top: 1px solid #CCA0AF;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+}
+
+.modal {
+  width: 100vw;
+  height: 100vh;
+  display: flex;
+  box-sizing: border-box;
+  justify-content: center;
+  align-items: center;
+  background: rgba(0,0,0, 0.3);
+  cursor: pointer;
+  position: fixed;
+  top: 0;
+  left: 0;
+  // Don't forget an arbitarily large z-index!
+  z-index: 300;
+}
+
+.modalContents {
+  cursor: auto;
+  background: white;
+  border-radius: 0.5rem;
+  padding: 2rem;
+  max-width: 500px;
+  max-height: 80vh;
+  margin: 2rem;
+  box-sizing: border-box;
+}

@@ -1,44 +1,57 @@
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+# React Modal - with Portals!
 
-## Available Scripts
+<img src="https://i.imgur.com/Q6oZSEW.gif" />
 
-In the project directory, you can run:
+Let's make a modal, that works anywhere. Commonly, we want modals, toasts, or other elements that position themselves absolutely in the browser. But, we need to be careful where we render these elements or they will end up being positionted relative to the wrong element, or get caught by an `overflow: hidden`.
 
-### `yarn start`
+Instead of worrying about that, React gives us a fantastic tool called [Portals](https://reactjs.org/docs/portals.html). This allows us to render our components anywhere in the DOM tree that we want!
 
-Runs the app in the development mode.<br />
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+```js
+const SomeComponent = () => {
+  return (
+  <div style={{ position: 'relative', overflow: 'hidden', width: '20px', height: '20px' }}>
+    Some other content
+    <Modal>
+      This will still fill up the screen, despite its 'parent' having css properties that would normally cause problems. 
+    </Modal>
+  </div>
+  )
+};
+```
 
-The page will reload if you make edits.<br />
-You will also see any lint errors in the console.
+This involves some amount of DOM manipulation, which is a good thing! We can't forget that React exsists in our web browser, our vanilla DOM and JS knowledge is still valuable, and React cannot abstract *everything* away.
 
-### `yarn test`
+## Goals
 
-Launches the test runner in the interactive watch mode.<br />
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+* [ ] Create a style a Modal component (which can be surprisingly difficult)
+* [ ] Conditionall render the Modal based on some state (i.e. on button press)
+* [ ] Put the Modal in a container that ruins its positioning with `position: relative`, `overflow: hidden`, etc.
+* [ ] Escape the container in the DOM using a [Portal](https://reactjs.org/docs/portals.html) in the Modal component
+  * [ ] Hardcode a portal root in `index.html`
+  * [ ] Create a `div`, once per component, to use a portal target
+  * [ ] Write a `useEffect` that correctly adds the portal target to the portal root on mount, and removes it on umount
+* [ ] Make clicking outside the Modal dismiss it (a huge pet peeve of mine)
+* [ ] Prevent the page body from scrolling while the portal is open, while preserving scroll position. If you don't know how to do this, google it. That's why I put it here.
 
-### `yarn build`
+## Stretch Goals
 
-Builds the app for production to the `build` folder.<br />
-It correctly bundles React in production mode and optimizes the build for the best performance.
+* [ ] Write a `usePortal` hook
+* [ ] Understand what this comment means in the React documentation
+  ```
+  // The portal element is inserted in the DOM tree after
+  // the Modal's children are mounted, meaning that children
+  // will be mounted on a detached DOM node. If a child
+  // component requires to be attached to the DOM tree
+  // immediately when mounted, for example to measure a
+  // DOM node, or uses 'autoFocus' in a descendant, add
+  // state to Modal and only render the children when Modal
+  // is inserted in the DOM tree.
+  ```
+* [ ] Use a dynamic portal root, instead of hardcoding one into `index.html`. You can do this many ways, including a smart `useEffect`, a context provider, etc.
+* [ ] Close the modal when 'Escape' is pressed, regardless of what the keyboard is focusing.
+* [ ] Create a Toast component, and a dispatch function to add new toasts.
 
-The build is minified and the filenames include the hashes.<br />
-Your app is ready to be deployed!
+## Notes
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
-
-### `yarn eject`
-
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
-
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
-
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
-
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
-
-## Learn More
-
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
+* This trickery is neccessary because of [the stacking context](https://developer.mozilla.org/en-US/docs/Web/CSS/CSS_Positioning/Understanding_z_index/The_stacking_context) and [relative positioning](https://developer.mozilla.org/en-US/docs/Learn/CSS/CSS_layout/Positioning).
+* The React Tree is **NOT** the DOM Tree. For example, Events will still propogate 'normally' through the React tree even if the resulting elements end up differently in the rendered DOM tree.
