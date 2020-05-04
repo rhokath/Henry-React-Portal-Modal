@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useLayoutEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import { createPortal } from 'react-dom';
 import styles from './App.module.scss';
 
@@ -12,7 +12,7 @@ const App = () => {
         Open a modal
       </button>
       {isNormalOpen && (
-        <Modal onClose={() => setIsNormalOpen(false)}>
+        <Modal>
           This is a test
         </Modal>
       )}
@@ -22,7 +22,7 @@ const App = () => {
           Open a modal
         </button>
         {isFooterOpen && (
-          <Modal onClose={() => setIsFooterOpen(false)}>
+          <Modal>
             This is rendered 'inside' the sticky footer, and would normally not be allowed to fill the screen.
           </Modal>
         )}
@@ -31,61 +31,25 @@ const App = () => {
   );
 }
 
-// The '!' tells typescript that this must be defined. Technically, if someone
-// delete the div from index.html this would null, and we would get a runtime
-// error. There are ways of fixing this, or atleast throwing an error earlier, but
-// I'll leave that as an exercise.
-const portalRoot = document.querySelector('#portal-root')!;
+// We will use a hardcoded portal root to make things easier. You have to put a
+// dom node in here though, I'm not doing that for you.
+const portalRoot = null;
 
 const Portal: React.FC = ({ children }) => {
-  const [portalElem] = useState(() => document.createElement('div'));
-
-  useEffect(() => {
-    portalRoot.appendChild(portalElem);
-    return () => {
-      portalRoot.removeChild(portalElem);
-    };
-  }, [portalElem]);
-
+  // This should do portal things
   return (
-    createPortal(children, portalElem)
+    <>
+      children
+    </>
   );
 };
 
-type ModalProps = {
-  onClose: () => void;
-};
-
-const Modal: React.FC<ModalProps> = ({ children, onClose }) => {
-
-  // Stop body from scrolling, while preserving scroll position.
-  // Yes, we are doing DOM manipulation and you cannot stop me.
-  useLayoutEffect(() => {
-    const scrollY = window.scrollY;
-    const position = document.body.style.position;
-    document.body.style.position = 'fixed';
-    const top = document.body.style.top;
-    document.body.style.top = `-${scrollY}px`;
-    return () => {
-      document.body.style.position = position;
-      document.body.style.top = top;
-      Number(scrollY) && window.scrollTo(0, Number(scrollY));
-    };
-  }, []);
-
-  const handleCloseClick = (e: React.MouseEvent) => {
-    if (e.currentTarget === e.target) {
-      onClose();
-    }
-  };
+// This should do modal things (using Portal) and apply styles to the containing div(s)
+const Modal: React.FC = ({ children }) => {
   return (
-    <Portal>
-      <div className={styles.modal} onClick={handleCloseClick}>
-        <div className={styles.modalContents}>
-          {children}
-        </div>
-      </div>
-    </Portal>
+    <div>
+      {children}
+    </div>
   )
 };
 

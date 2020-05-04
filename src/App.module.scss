@@ -40,30 +40,3 @@ button {
   justify-content: center;
   flex-direction: column;
 }
-
-.modal {
-  width: 100vw;
-  height: 100vh;
-  display: flex;
-  box-sizing: border-box;
-  justify-content: center;
-  align-items: center;
-  background: rgba(0,0,0, 0.3);
-  cursor: pointer;
-  position: fixed;
-  top: 0;
-  left: 0;
-  // Don't forget an arbitarily large z-index!
-  z-index: 300;
-}
-
-.modalContents {
-  cursor: auto;
-  background: white;
-  border-radius: 0.5rem;
-  padding: 2rem;
-  max-width: 500px;
-  max-height: 80vh;
-  margin: 2rem;
-  box-sizing: border-box;
-}
