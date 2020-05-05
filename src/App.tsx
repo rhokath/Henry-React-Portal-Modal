@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useLayoutEffect } from 'react';
 import { createPortal } from 'react-dom';
 import styles from './App.module.scss';
 
@@ -12,7 +12,7 @@ const App = () => {
         Open a modal
       </button>
       {isNormalOpen && (
-        <Modal>
+        <Modal onClose={() => setIsNormalOpen(false)}>
           This is a test
         </Modal>
       )}
@@ -22,7 +22,7 @@ const App = () => {
           Open a modal
         </button>
         {isFooterOpen && (
-          <Modal>
+          <Modal onClose={() => setIsFooterOpen(false)}>
             This is rendered 'inside' the sticky footer, and would normally not be allowed to fill the screen.
           </Modal>
         )}
@@ -33,24 +33,66 @@ const App = () => {
 
 // We will use a hardcoded portal root to make things easier. You have to put a
 // dom node in here though, I'm not doing that for you.
-const portalRoot = null;
+const portalRoot = document.querySelector('#portal-root')!;
 
 const Portal: React.FC = ({ children }) => {
-  // This should do portal things
+  const [targetElem] = useState(() => (
+    document.createElement('div')
+  ));
+
+  useEffect(() => {
+    portalRoot.appendChild(targetElem);
+    return () => {
+      portalRoot.removeChild(targetElem);
+    };
+  }, [targetElem]);
+
   return (
-    <>
-      children
-    </>
+    createPortal(
+      children,
+      targetElem
+    )
   );
 };
 
-// This should do modal things (using Portal) and apply styles to the containing div(s)
-const Modal: React.FC = ({ children }) => {
+type ModalProps = {
+  onClose: () => void,
+};
+
+const Modal: React.FC<ModalProps> = ({ children, onClose }) => {
+  useScrollLock();
+
+  const handleContainerClick = (e: React.MouseEvent) => {
+    if (e.currentTarget === e.target) {
+      onClose();
+    }
+  };
+
   return (
-    <div>
-      {children}
-    </div>
+    <Portal>
+      <div className={styles.modalContainer} onClick={handleContainerClick}>
+        <div className={styles.modal}>
+          {children}
+        </div>
+      </div>
+    </Portal>
   )
+};
+
+const useScrollLock = () => {
+  useLayoutEffect(() => {
+    const scrollY = window.scrollY;
+    const position = document.body.style.position;
+    const top = document.body.style.top;
+    document.body.style.position = 'fixed';
+    document.body.style.top = `-${scrollY}px`;
+
+    return () => {
+      document.body.style.position = position;
+      document.body.style.top = top;
+      window.scrollTo(0, scrollY);
+    }
+  }, []);
 };
 
 export default App;
