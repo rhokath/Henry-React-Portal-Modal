@@ -47,8 +47,10 @@ const Portal: React.FC = ({ children }) => {
 // This should do modal things (using Portal) and apply styles to the containing div(s)
 const Modal: React.FC = ({ children }) => {
   return (
-    <div>
+    <div className={styles.modalContainer}>
+      <div className={styles.modal}>
       {children}
+      </div>
     </div>
   )
 };

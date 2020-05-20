@@ -40,3 +40,20 @@ button {
   justify-content: center;
   flex-direction: column;
 }
+.modalContainer{
+  height: 100vh;
+  width: 100vw;
+  position: absolute;
+  left: 0;
+  top: 0;
+  background: rgba(0, 0, 0, 0.2);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 1rem;
+}
+
+.modal{
+  background: #fafafa;
+  border-radius: 0.25rem;
+}
