@@ -56,4 +56,9 @@ button {
 .modal{
   background: #fafafa;
   border-radius: 0.25rem;
+  padding: 1rem;
+  //allow vertical scroll within modal itself
+  max-height: 80vh;
+  max-width: 90vh;
+  overflow: auto;
 }

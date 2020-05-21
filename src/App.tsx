@@ -33,13 +33,20 @@ const App = () => {
 
 // We will use a hardcoded portal root to make things easier. You have to put a
 // dom node in here though, I'm not doing that for you.
-const portalRoot = null;
+/*
+! tells typescript yes this value can be null or undefined but it is defined, assume that this exists
+*/
+const portalRoot = document.querySelector('#portal-root')!;
 
 const Portal: React.FC = ({ children }) => {
   // This should do portal things
+  //lazy initialization == initialize useState with a function
+  const[targetElem, setTargetElem] = useState(()=>{
+    document.createElement('div')
+  })
   return (
     <>
-      children
+      {children}
     </>
   );
 };
