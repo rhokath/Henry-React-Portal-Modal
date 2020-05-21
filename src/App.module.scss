@@ -40,3 +40,29 @@ button {
   justify-content: center;
   flex-direction: column;
 }
+.modalContainer{
+  height: 100vh;
+  width: 100vw;
+  position: fixed;
+  left: 0;
+  top: 0;
+  background: rgba(0, 0, 0, 0.2);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+  z-index: 300;
+  //establish a stacking context
+  //transform: rotate(0)
+}
+
+.modal{
+  cursor: auto;
+  background: #fafafa;
+  border-radius: 0.25rem;
+  padding: 1rem;
+  //allow vertical scroll within modal itself
+  max-height: 80vh;
+  max-width: 90vh;
+  overflow: auto;
+}
