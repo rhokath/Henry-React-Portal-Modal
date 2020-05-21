@@ -50,10 +50,14 @@ button {
   display: flex;
   justify-content: center;
   align-items: center;
-  padding: 1rem;
+  cursor: pointer;
+  z-index: 300;
+  //establish a stacking context
+  //transform: rotate(0)
 }
 
 .modal{
+  cursor: auto;
   background: #fafafa;
   border-radius: 0.25rem;
   padding: 1rem;

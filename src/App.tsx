@@ -12,7 +12,7 @@ const App = () => {
         Open a modal
       </button>
       {isNormalOpen && (
-        <Modal>
+        <Modal onClose={() => setIsNormalOpen(false)}>
           This is a test
         </Modal>
       )}
@@ -22,7 +22,7 @@ const App = () => {
           Open a modal
         </button>
         {isFooterOpen && (
-          <Modal>
+          <Modal onClose={() =>setIsFooterOpen(false)}>
             This is rendered 'inside' the sticky footer, and would normally not be allowed to fill the screen.
           </Modal>
         )}
@@ -41,24 +41,53 @@ const portalRoot = document.querySelector('#portal-root')!;
 const Portal: React.FC = ({ children }) => {
   // This should do portal things
   //lazy initialization == initialize useState with a function
-  const[targetElem, setTargetElem] = useState(()=>{
+  //so will only run of first render, similar to it being in constructor of class component
+  //here it's a hack because trying to encapsulate side effect
+  const [targetElem] = useState(()=>{
     document.createElement('div')
-  })
+  });
+  useEffect(()=> {
+    portalRoot.appendChild(targetElem)
+    //clean up function
+    return () => { 
+      portalRoot.removeChild(targetElem)
+    }
+
+  }, [targetElem])
   return (
-    <>
-      {children}
-    </>
+   createPortal(
+     children,
+     targetElem
+   )
   );
 };
-
+type ModalProps = {
+  //returns nothing
+  onClose: () => void;
+}
 // This should do modal things (using Portal) and apply styles to the containing div(s)
-const Modal: React.FC = ({ children }) => {
+const Modal: React.FC<ModalProps> = ({ children, onClose}) => {
+  //this way you don't have to stop event propogation
+  const handleContainerClick = (e: React.MouseEvent) => {
+    if(e.currentTarget === e.target){
+      onClose()
+    }
+  }
+  //prevent scrolling outside of modal
+  useEffect(() => {
+    document.body.style.position = 'fixed'
+    return () => {
+      document.body.style.position = ''
+    }
+  })
   return (
-    <div className={styles.modalContainer}>
-      <div className={styles.modal}>
-      {children}
+    <Portal>
+      <div className={styles.modalContainer} onClick={handleContainerClick}>
+        <div className={styles.modal}>
+        {children}
+        </div>
       </div>
-    </div>
+    </Portal>
   )
 };
 
